@@ -9,3 +9,5 @@
 *.csv
 *.zip
 *.rar
+*.pyc
+__pycache__/
