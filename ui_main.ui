@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>960</width>
-    <height>672</height>
+    <width>959</width>
+    <height>669</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -38,7 +38,7 @@
      </font>
     </property>
     <property name="currentIndex">
-     <number>0</number>
+     <number>3</number>
     </property>
     <property name="usesScrollButtons">
      <bool>false</bool>
@@ -274,7 +274,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;- You can stop Progress by clicking on &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; font-weight:600;&quot;&gt;Stop&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; button&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;- Do &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; font-weight:600;&quot;&gt;NOT&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; disconnect device during the progress&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Copyright 2021 &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; text-decoration: underline;&quot;&gt;AIRLab&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; - All Rights Reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Copyright &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; text-decoration: underline;&quot;&gt;AIRLab&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; - All Rights Reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="Line" name="line_19">
@@ -409,7 +409,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QPushButton" name="start1">
        <property name="geometry">
         <rect>
-         <x>650</x>
+         <x>670</x>
          <y>210</y>
          <width>113</width>
          <height>32</height>
@@ -427,7 +427,7 @@ p, li { white-space: pre-wrap; }
       <widget class="QPushButton" name="stop1">
        <property name="geometry">
         <rect>
-         <x>650</x>
+         <x>670</x>
          <y>260</y>
          <width>113</width>
          <height>32</height>
@@ -882,7 +882,7 @@ QListWidget:hover {
       <widget class="QPushButton" name="saveload1">
        <property name="geometry">
         <rect>
-         <x>650</x>
+         <x>670</x>
          <y>310</y>
          <width>113</width>
          <height>32</height>
@@ -1026,7 +1026,7 @@ QListWidget:hover {
       <widget class="QPushButton" name="markertab1">
        <property name="geometry">
         <rect>
-         <x>590</x>
+         <x>610</x>
          <y>210</y>
          <width>41</width>
          <height>131</height>
@@ -1523,6 +1523,29 @@ r</string>
         <string>User Manual</string>
        </property>
       </widget>
+      <widget class="QPushButton" name="sensor_window">
+       <property name="geometry">
+        <rect>
+         <x>560</x>
+         <y>210</y>
+         <width>41</width>
+         <height>131</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <family>Arial</family>
+        </font>
+       </property>
+       <property name="text">
+        <string>S
+e
+n
+s
+o
+r</string>
+       </property>
+      </widget>
      </widget>
     </widget>
     <widget class="QWidget" name="tab">
@@ -1748,7 +1771,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;- You can stop Progress by clicking on &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; font-weight:600;&quot;&gt;Stop&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; button&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;- Do &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; font-weight:600;&quot;&gt;NOT&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; disconnect device during the progress&lt;/span&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Copyright 2021 &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; text-decoration: underline;&quot;&gt;AIRLab&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; - All Rights Reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Copyright &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; text-decoration: underline;&quot;&gt;AIRLab&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; - All Rights Reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="Line" name="line_18">
@@ -3759,7 +3782,7 @@ p, li { white-space: pre-wrap; }
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
 &lt;p style=&quot;-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-family:'.AppleSystemUIFont';&quot;&gt;&lt;br /&gt;&lt;/p&gt;
-&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Copyright 2021 &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; text-decoration: underline;&quot;&gt;AIRLab&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; - All Rights Reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt;Copyright &lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont'; text-decoration: underline;&quot;&gt;AIRLab&lt;/span&gt;&lt;span style=&quot; font-family:'.AppleSystemUIFont';&quot;&gt; - All Rights Reserved&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
        </property>
       </widget>
       <widget class="QPushButton" name="stop">
@@ -4529,6 +4552,21 @@ r</string>
         <string>User Manual</string>
        </property>
       </widget>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="tab_4">
+     <attribute name="title">
+      <string>Page</string>
+     </attribute>
+     <widget class="QWidget" name="content_plot" native="true">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>-30</y>
+        <width>971</width>
+        <height>651</height>
+       </rect>
+      </property>
      </widget>
     </widget>
    </widget>
