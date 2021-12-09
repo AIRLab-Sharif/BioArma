@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>SaveLoad</class>
+ <widget class="QWidget" name="SaveLoad">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>402</width>
+    <height>160</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Form</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true"/>
+  </property>
+  <widget class="QWidget" name="widget" native="true">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>401</width>
+     <height>311</height>
+    </rect>
+   </property>
+   <property name="styleSheet">
+    <string notr="true">color:black;
+
+QDoubleSpinBox
+{
+background-color: rgb(200, 200, 200);
+color:black;
+}
+QDoubleSpinBox:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+}
+QListWidget
+{
+background-color: rgb(200, 200, 200);
+color:black;
+}
+QListWidget:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+}
+QListView{
+background-color:  rgb(255, 255, 255);
+  color: white;
+}
+
+QComboBox{
+background-color:  rgb(200, 200, 200);
+color:black;
+}
+QComboBox:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+}
+
+QTextBrowser
+{
+background-color: black;
+color:white;
+border-radius: 5px;
+}
+
+QPushButton
+{
+background-color: rgb(200, 200, 200);
+border-radius: 8px;
+color:black;
+
+}
+QPushButton:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+
+}
+
+
+QSpinBox
+{
+background-color: rgb(200, 200, 200);
+
+color:balck;
+}
+QSpinBox:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+
+}
+
+
+
+QLabel
+{
+color: white;
+}
+
+
+</string>
+   </property>
+   <widget class="QTextEdit" name="SubjectName">
+    <property name="geometry">
+     <rect>
+      <x>270</x>
+      <y>70</y>
+      <width>121</width>
+      <height>21</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QTextEdit
+{
+background-color: rgb(200, 200, 200);
+
+color:balck;
+}
+QTextEdit:hover {
+  background-color:  rgb(166, 166, 166);
+  color: white;
+
+}</string>
+    </property>
+    <property name="html">
+     <string>&lt;!DOCTYPE HTML PUBLIC &quot;-//W3C//DTD HTML 4.0//EN&quot; &quot;http://www.w3.org/TR/REC-html40/strict.dtd&quot;&gt;
+&lt;html&gt;&lt;head&gt;&lt;meta name=&quot;qrichtext&quot; content=&quot;1&quot; /&gt;&lt;style type=&quot;text/css&quot;&gt;
+p, li { white-space: pre-wrap; }
+&lt;/style&gt;&lt;/head&gt;&lt;body style=&quot; font-family:'.AppleSystemUIFont'; font-size:13pt; font-weight:400; font-style:normal;&quot;&gt;
+&lt;p style=&quot; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;&quot;&gt;Subject1&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+    </property>
+   </widget>
+   <widget class="Line" name="line">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>30</y>
+      <width>3</width>
+      <height>61</height>
+     </rect>
+    </property>
+    <property name="orientation">
+     <enum>Qt::Vertical</enum>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>10</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>For saving current setup, click on Save</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="ValveM6_3">
+    <property name="geometry">
+     <rect>
+      <x>280</x>
+      <y>30</y>
+      <width>101</width>
+      <height>20</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Subject's Name</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Load_windowButt">
+    <property name="geometry">
+     <rect>
+      <x>230</x>
+      <y>130</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Load</string>
+    </property>
+   </widget>
+   <widget class="QLabel" name="label_2">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>60</y>
+      <width>241</width>
+      <height>41</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>For loading sxiting setup, click on Load</string>
+    </property>
+   </widget>
+   <widget class="QPushButton" name="Save_windowButt">
+    <property name="geometry">
+     <rect>
+      <x>90</x>
+      <y>130</y>
+      <width>113</width>
+      <height>32</height>
+     </rect>
+    </property>
+    <property name="text">
+     <string>Save</string>
+    </property>
+   </widget>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

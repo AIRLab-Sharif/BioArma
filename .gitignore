@@ -1,0 +1,8 @@
+*.pdf
+*.png
+*.jpg
+*.pkl
+*.qrc
+.idea/
+.DS_Store
+*.docx
