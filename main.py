@@ -10,11 +10,18 @@ import numpy as np
 import pickle
 from datetime import date
 import webbrowser
+import matplotlib.pylab as plt
+import matplotlib.animation as animation
+import matplotlib.figure as mpl_fig
+from matplotlib.backends.backend_qt5agg import FigureCanvas 
+from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+import serial
 
 from ui_main import *
 from Login import *
 from save_load import *
 from Marker import *
+from sensor import *
 
 ############################################################    Logic and UI
 board = None
@@ -31,17 +38,19 @@ def DeviceInit():
         DeviceConnected = False
 
 
-DeviceInit()
+# DeviceInit()
 
 #### َQTFiles
-# qtcreator_file = "ui_main.ui"
-# qtlogin_file = "Login.ui"
-# qtsaveload_file = "save_load.ui"
-# qtmarker_file = "Marker.ui"
-# Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
-# Ui_LoginWindow, QtBaseClass2 = uic.loadUiType(qtlogin_file)
-# Ui_SaveLoad, QtBaseClass3 = uic.loadUiType(qtsaveload_file)
-# Ui_Marker, QtBaseClass4 = uic.loadUiType(qtmarker_file)
+qtcreator_file = "ui_main.ui"
+qtlogin_file = "Login.ui"
+qtsaveload_file = "save_load.ui"
+qtmarker_file = "Marker.ui"
+qtmarker_sensor = "sensor.ui"
+Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
+Ui_LoginWindow, QtBaseClass2 = uic.loadUiType(qtlogin_file)
+Ui_SaveLoad, QtBaseClass3 = uic.loadUiType(qtsaveload_file)
+Ui_Marker, QtBaseClass4 = uic.loadUiType(qtmarker_file)
+Ui_Sensor, QtBaseClass5 = uic.loadUiType(qtmarker_sensor)
 
 UserManualURL = "http://ee.sharif.ir/~airlab/BioarmaUserManual.pdf"
 Valve_times = ([0, 0, 0, 0, 0, ])
@@ -285,7 +294,6 @@ def ValvesStatus():
             window.MS.setText(ON)
             window.MS_2.setText(ON)
             window.MS_3.setText(ON)
-
 class Timer(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
@@ -350,7 +358,7 @@ class Timer(QObject):
 
         self.finished.emit()
 
-class MarkerُThread(QObject):
+class MarkerThread(QObject):
     finished = pyqtSignal()
 
     def Marker(self):
@@ -720,6 +728,72 @@ class MarkerWindow(QtWidgets.QMainWindow, Ui_Marker):
         Valve6_Marker = self.valve6.isChecked()
         BOT_Marker = self.BOT.isChecked()
 
+class SensorWindow(QtWidgets.QMainWindow, Ui_Sensor):
+
+    def __init__(self, parent=None):
+        QtWidgets.QMainWindow.__init__(self)
+        Ui_Sensor.__init__(self)
+        
+        self.setupUi(self)
+        self.setFixedSize(self.size())
+
+        self.myFig = MyFigureCanvas(x_len=200, y_range=[0, 100], interval=20)
+        lay = QtWidgets.QVBoxLayout(self.content_plot)        
+        lay.addWidget(self.myFig)
+
+
+
+class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
+    '''
+    This is the FigureCanvas in which the live plot is drawn.
+
+    '''
+    def __init__(self, x_len, y_range, interval) -> None:
+        '''
+        :param x_len:       The nr of data points shown in one plot.
+        :param y_range:     Range on y-axis.
+        :param interval:    Get a new datapoint every .. milliseconds.
+
+        '''
+        self.serialPort = serial.Serial('/dev/tty.usbmodem14201', 9600)
+        FigureCanvas.__init__(self, mpl_fig.Figure())
+        self._x_len_ = x_len
+        self._y_range_ = y_range
+
+        # Store two lists _x_ and _y_
+        x = list(range(0, x_len))
+        y = [0] * x_len
+
+        # Store a figure and ax
+        self._ax_  = self.figure.subplots()
+        self._line_, = self._ax_.plot(x, y)
+        self.dataTemp = 0
+        # Call superclass constructors
+        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,), interval=interval, blit=True)
+        return
+
+    def current_milli_time(self):
+        return round(time.time() * 1000)
+
+    def _update_canvas_(self, i, x, y) -> None:
+
+        try:
+            dataRealTime = int(self.serialPort.readline())
+            self.dataTemp = dataRealTime
+        except:
+            dataRealTime = self.dataTemp
+        finally:
+            timeNow = (self.current_milli_time())/1000
+        # Add x and y to lists
+
+        y.append(dataRealTime)     # Add new datapoint
+        x.append(timeNow)
+        y = y[-self._x_len_:]                        # Truncate list _y_
+        self._line_.set_ydata(y)
+        LimitD = 10000
+        self._ax_.set_ylim(dataRealTime-LimitD,dataRealTime+LimitD)
+        return self._line_,
+
 class LoginWindow(QtWidgets.QMainWindow, Ui_LoginWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self)
@@ -771,6 +845,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.saveload2.clicked.connect(self.SaveLoadWinodw)
         self.saveload3.clicked.connect(self.SaveLoadWinodw)
         self.markertab1.clicked.connect(self.MarkerWindow)
+        self.sensor_window.clicked.connect(self.SensorWindow)
         self.markertab2.clicked.connect(self.MarkerWindow)
         self.markertab3.clicked.connect(self.MarkerWindow)
         self.TimeLineGenarateTab1.clicked.connect(self.GenerateTimeLine)
@@ -888,6 +963,10 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def MarkerWindow(self):
         self.window4 = MarkerWindow()
         self.window4.show()
+
+    def SensorWindow(self):
+        self.window_sensor = SensorWindow()
+        self.window_sensor.show()
 
     def UserLogin(self):
         self.window2 = LoginWindow()
