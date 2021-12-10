@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>959</width>
+    <width>954</width>
     <height>669</height>
    </rect>
   </property>
@@ -4562,10 +4562,19 @@ r</string>
       <property name="geometry">
        <rect>
         <x>0</x>
-        <y>-30</y>
-        <width>971</width>
-        <height>651</height>
+        <y>0</y>
+        <width>961</width>
+        <height>521</height>
        </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">QWidget
+{
+    background-color: white;
+}
+
+
+</string>
       </property>
      </widget>
     </widget>
