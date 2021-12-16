@@ -16,7 +16,7 @@ import matplotlib.figure as mpl_fig
 from matplotlib.backends.backend_qt5agg import FigureCanvas 
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import serial
-
+from sensor_process import LPFilter
 from ui_main import *
 from Login import *
 from save_load import *
@@ -307,6 +307,7 @@ def ValvesStatus():
             window.MS.setText(ON)
             window.MS_2.setText(ON)
             window.MS_3.setText(ON)
+
 class Timer(QObject):
     finished = pyqtSignal()
     progress = pyqtSignal(int)
@@ -741,8 +742,6 @@ class MarkerWindow(QtWidgets.QMainWindow, Ui_Marker):
         Valve6_Marker = self.valve6.isChecked()
         BOT_Marker = self.BOT.isChecked()
 
-
-
 class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
 
     def __init__(self, x_len, y_range, interval):
@@ -762,9 +761,6 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,), interval=interval, blit=True)
         return
 
-    def current_milli_time(self):
-        return round(time.time() * 1000)
-
     def _update_canvas_(self, i, x, y):
 
         try:
@@ -773,12 +769,17 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         except:
             dataRealTime = self.dataTemp
         finally:
-            timeNow = (self.current_milli_time())/1000
-
+            timeNow = time.time()
+        
         y.append(dataRealTime) 
         x.append(timeNow)
+    
         y = y[-self._x_len_:] 
-        x = x[-self._x_len_:]  
+        x = x[-self._x_len_:]
+
+        filtered_data = LPFilter(x, y)
+        y = filtered_data
+
         self._line_.set_ydata(y)
         LimitD = 10000
         self._ax_.set_ylim(dataRealTime-LimitD,dataRealTime+LimitD)
@@ -851,6 +852,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RestValveTab1.currentIndexChanged.connect(self.UpdateStandardandRestValve)
         self.RestValveValue.currentIndexChanged.connect(self.UpdateRestValveValue)
         self.RestValveTab3.currentIndexChanged.connect(self.UpdateRestValveTab3)
+
         # self.ValvesStatusStart()
         print(DeviceConnected, SensorConnected)
         if DeviceConnected:
