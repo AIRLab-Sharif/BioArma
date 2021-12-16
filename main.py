@@ -21,36 +21,49 @@ from ui_main import *
 from Login import *
 from save_load import *
 from Marker import *
-from sensor import *
+
 
 ############################################################    Logic and UI
 board = None
 DeviceConnected = None
-
+SensorConnected = None
+SensorDeviceAddr = None
 
 def DeviceInit():
     global board
+    global sensor_board
     global DeviceConnected
-    try:
-        board = Arduino(Arduino.AUTODETECT)  # detect Arduino with Autodetect
-        DeviceConnected = True
-    except:
-        DeviceConnected = False
+    global SensorConnected
+    global SensorDeviceAddr
+    ports = list(serial.tools.list_ports.comports())
+    for p in ports[1:]:
+        # try:
+            serialPort = serial.Serial(p.device, 9600, timeout=2)
+            if len(serialPort.readline()) != 0:
+                sensor_board = Arduino(p.device)
+                SensorConnected = True
+                SensorDeviceAddr = p.device
+                print("Sensor")
+            else:
+                board = Arduino(p.device)
+                DeviceConnected = True
+                print("Ofalctometer")
+        # except:
+        #     pass
 
-
-# DeviceInit()
+DeviceInit()
 
 #### َQTFiles
 qtcreator_file = "ui_main.ui"
 qtlogin_file = "Login.ui"
 qtsaveload_file = "save_load.ui"
 qtmarker_file = "Marker.ui"
-qtmarker_sensor = "sensor.ui"
-Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
-Ui_LoginWindow, QtBaseClass2 = uic.loadUiType(qtlogin_file)
-Ui_SaveLoad, QtBaseClass3 = uic.loadUiType(qtsaveload_file)
-Ui_Marker, QtBaseClass4 = uic.loadUiType(qtmarker_file)
-Ui_Sensor, QtBaseClass5 = uic.loadUiType(qtmarker_sensor)
+
+# Ui_MainWindow, QtBaseClass = uic.loadUiType(qtcreator_file)
+# Ui_LoginWindow, QtBaseClass2 = uic.loadUiType(qtlogin_file)
+# Ui_SaveLoad, QtBaseClass3 = uic.loadUiType(qtsaveload_file)
+# Ui_Marker, QtBaseClass4 = uic.loadUiType(qtmarker_file)
+
 
 UserManualURL = "http://ee.sharif.ir/~airlab/BioarmaUserManual.pdf"
 Valve_times = ([0, 0, 0, 0, 0, ])
@@ -736,7 +749,7 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         FigureCanvas.__init__(self)
         super(MyFigureCanvas, self).__init__()
         super().__init__(mpl_fig.Figure())
-        self.serialPort = serial.Serial('/dev/tty.usbmodem14201', 9600)
+        self.serialPort = serial.Serial(SensorDeviceAddr, 9600)
         self._x_len_ = x_len
         self._y_range_ = y_range
 
@@ -822,17 +835,12 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.saveload2.clicked.connect(self.SaveLoadWinodw)
         self.saveload3.clicked.connect(self.SaveLoadWinodw)
         self.markertab1.clicked.connect(self.MarkerWindow)
-        self.sensor_window.clicked.connect(self.SensorWindow)
         self.markertab2.clicked.connect(self.MarkerWindow)
         self.markertab3.clicked.connect(self.MarkerWindow)
         self.TimeLineGenarateTab1.clicked.connect(self.GenerateTimeLine)
         self.UserManualTab1.clicked.connect(self.OpenUserManualWeb)
         self.UserManualTab2.clicked.connect(self.OpenUserManualWeb)
         self.UserManualTab3.clicked.connect(self.OpenUserManualWeb)
-        # self.stop1.clicked.connect(self.stop_all1)
-        # self.login.clicked.connect(self.UserLogin)
-        # self.login_tab2.clicked.connect(self.UserLogin)
-        # self.login_tab1.clicked.connect(self.UserLogin)
         self.stop.setDisabled(True)
         self.stop2.setDisabled(True)
         self.stop1.setDisabled(True)
@@ -844,6 +852,17 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.RestValveValue.currentIndexChanged.connect(self.UpdateRestValveValue)
         self.RestValveTab3.currentIndexChanged.connect(self.UpdateRestValveTab3)
         # self.ValvesStatusStart()
+        print(DeviceConnected, SensorConnected)
+        if DeviceConnected:
+            self.olfactometer_check.setText("Connected")
+        else:
+            self.olfactometer_check.setText("Not Connected")
+        if SensorConnected:
+
+            self.SensorWindow()
+            self.sensor_check.setText("Connected")
+        else:
+            self.olfactometer_check.setText("Not Connected")    
 
     def OpenUserManualWeb(self):
         global UserManualURL
@@ -1491,12 +1510,12 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         global BOT_Marker
         if(BOT_Marker):
             self.thread = QThread(parent=self)
-            self.MarkerُThread = MarkerُThread()
-            self.MarkerُThread.moveToThread(self.thread)
-            self.thread.started.connect(self.MarkerُThread.Marker)
-            self.MarkerُThread.finished.connect(self.thread.quit)
-            self.MarkerُThread.finished.connect(self.MarkerُThread.deleteLater)
-            self.MarkerُThread.finished.connect(self.thread.deleteLater)
+            self.MarkerThread = MarkerThread()
+            self.MarkerThread.moveToThread(self.thread)
+            self.thread.started.connect(self.MarkerThread.Marker)
+            self.MarkerThread.finished.connect(self.thread.quit)
+            self.MarkerThread.finished.connect(self.MarkerThread.deleteLater)
+            self.MarkerThread.finished.connect(self.thread.deleteLater)
             self.thread.start()
 
 
