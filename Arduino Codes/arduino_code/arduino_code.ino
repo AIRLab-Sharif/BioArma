@@ -96,7 +96,7 @@ ISR (TIMER2_COMPA_vect)
 void setup () 
   {
   Serial.begin(9600);       
-  Serial.println("Frequency Counter");
+//  Serial.println("Frequency Counter");
   } // end of setup
 
 void loop () 
