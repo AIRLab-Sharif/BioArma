@@ -37,19 +37,19 @@ def DeviceInit():
     global SensorDeviceAddr
     ports = list(serial.tools.list_ports.comports())
     for p in ports[1:]:
-        # try:
-            serialPort = serial.Serial(p.device, 9600, timeout=2)
-            if len(serialPort.readline()) != 0:
-                sensor_board = Arduino(p.device)
-                SensorConnected = True
-                SensorDeviceAddr = p.device
-                print("Sensor")
-            else:
-                board = Arduino(p.device)
-                DeviceConnected = True
-                print("Ofalctometer")
-        # except:
-        #     pass
+        
+        serialPort = serial.Serial(p.device, 9600, timeout=2)
+        # while 1:
+        #     print(serialPort.readline())
+        if len(serialPort.readline()) != 0:
+            sensor_board = Arduino(p.device)
+            SensorConnected = True
+            SensorDeviceAddr = p.device
+            print("Sensor")
+        else:
+            board = Arduino(p.device)
+            DeviceConnected = True
+            print("Ofalctometer")
 
 DeviceInit()
 
@@ -758,18 +758,22 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         self._ax_  = self.figure.subplots()
         self._line_, = self._ax_.plot(x, y)
         self.dataTemp = 0
+        self.timTemp = 0
         animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,), interval=interval, blit=True)
         return
 
     def _update_canvas_(self, i, x, y):
 
         try:
-            dataRealTime = int(self.serialPort.readline())
+            new_data = self.serialPort.readline()
+            timeNow = int(new_data.split()[0])
+            dataRealTime = int(new_data.split()[1])
             self.dataTemp = dataRealTime
+            self.timTemp = timeNow
         except:
             dataRealTime = self.dataTemp
-        finally:
-            timeNow = time.time()
+            timeNow = self.timTemp
+            
         
         y.append(dataRealTime) 
         x.append(timeNow)
@@ -864,7 +868,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.SensorWindow()
             self.sensor_check.setText("Connected")
         else:
-            self.olfactometer_check.setText("Not Connected")    
+            self.sensor_check.setText("Not Connected")    
 
     def OpenUserManualWeb(self):
         global UserManualURL
