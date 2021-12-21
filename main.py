@@ -17,6 +17,7 @@ from matplotlib.backends.backend_qt5agg import FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 import serial
 from sensor_process import LPFilter
+from forecasting import predict
 from ui_main import *
 from Login import *
 from save_load import *
@@ -37,19 +38,19 @@ def DeviceInit():
     global SensorDeviceAddr
     ports = list(serial.tools.list_ports.comports())
     for p in ports[1:]:
-        # try:
-            serialPort = serial.Serial(p.device, 9600, timeout=2)
-            if len(serialPort.readline()) != 0:
-                sensor_board = Arduino(p.device)
-                SensorConnected = True
-                SensorDeviceAddr = p.device
-                print("Sensor")
-            else:
-                board = Arduino(p.device)
-                DeviceConnected = True
-                print("Ofalctometer")
-        # except:
-        #     pass
+        
+        serialPort = serial.Serial(p.device, 9600, timeout=2)
+        # while 1:
+        #     print(serialPort.readline())
+        if len(serialPort.readline()) != 0:
+            sensor_board = Arduino(p.device)
+            SensorConnected = True
+            SensorDeviceAddr = p.device
+            print("Sensor")
+        else:
+            board = Arduino(p.device)
+            DeviceConnected = True
+            print("Ofalctometer")
 
 DeviceInit()
 
@@ -751,40 +752,59 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         self.serialPort = serial.Serial(SensorDeviceAddr, 9600)
         self._x_len_ = x_len
         self._y_range_ = y_range
+        x = []
+        y = []
 
-        x = list(range(0, x_len))
-        y = [0] * x_len
-
-        self._ax_  = self.figure.subplots()
-        self._line_, = self._ax_.plot(x, y)
+        self._ax_  = self.figure.subplots(2)
+        self._line_ = [self._ax_[0].plot(x, y), self._ax_[1].plot(x, y)]
         self.dataTemp = 0
-        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,), interval=interval, blit=True)
+        self.timTemp = 0
+        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,), interval=interval)
         return
 
     def _update_canvas_(self, i, x, y):
 
         try:
-            dataRealTime = int(self.serialPort.readline())
+            new_data = self.serialPort.readline()
+            timeNow = float(new_data.split()[0])
+            dataRealTime = int(new_data.split()[1])
             self.dataTemp = dataRealTime
+            self.timTemp = timeNow
         except:
             dataRealTime = self.dataTemp
-        finally:
-            timeNow = time.time()
-        
+            timeNow = self.timTemp
+        fs = 5
         y.append(dataRealTime) 
         x.append(timeNow)
-    
-        y = y[-self._x_len_:] 
+        y = y[-self._x_len_:]
         x = x[-self._x_len_:]
-
-        filtered_data = LPFilter(x, y)
-        y = filtered_data
-
-        self._line_.set_ydata(y)
+        # filtered_data = LPFilter(x, y)
+        # y = filtered_data
         LimitD = 10000
-        self._ax_.set_ylim(dataRealTime-LimitD,dataRealTime+LimitD)
+        self._line_[0][0].set_xdata(x)
+        self._line_[0][0].set_ydata(y)
+        num_datas = 2
+        secs4pred = 4
+        if len(x) >= 4*fs:
+            x2predict = np.reshape(x[-secs4pred*fs:], [num_datas, int(secs4pred*fs/num_datas)])
+            y2predict = np.reshape(y[-secs4pred*fs:], [num_datas, int(secs4pred*fs/num_datas)])
+            x_p = np.linspace(x[-1], x[-1]+int(secs4pred/num_datas), int(secs4pred*fs/num_datas))
+            y_predicted = predict(x2predict, y2predict, x_p)
+            self._line_[1][0].set_xdata(x_p) #[i+len(x) for i in x])
+            self._line_[1][0].set_ydata(y_predicted)
+            self._ax_[0].set_xlim(x[0], x_p[-1])
+            self._ax_[1].set_xlim(x[0], x_p[-1])
+            self._ax_[1].set_ylim(y_predicted[-1]-LimitD,y_predicted[-1]+LimitD)
+        else:
+            self._ax_[0].set_xlim(x[0], x[-1])
+            self._ax_[1].set_xlim(x[0], x[-1])
+
+
+        
+        self._ax_[0].set_ylim(dataRealTime-LimitD,dataRealTime+LimitD)
+        
         return self._line_,
-    
+
 class LoginWindow(QtWidgets.QMainWindow, Ui_LoginWindow):
     def __init__(self, parent=None):
         QtWidgets.QMainWindow.__init__(self)
@@ -864,7 +884,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
             self.SensorWindow()
             self.sensor_check.setText("Connected")
         else:
-            self.olfactometer_check.setText("Not Connected")    
+            self.sensor_check.setText("Not Connected")    
 
     def OpenUserManualWeb(self):
         global UserManualURL
@@ -963,7 +983,7 @@ class MyWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.window4.show()
 
     def SensorWindow(self):
-        self.myFig = MyFigureCanvas(x_len=200, y_range=[0, 100], interval=20)
+        self.myFig = MyFigureCanvas(x_len=100, y_range=[0, 100], interval=100)
         self.lay = QtWidgets.QVBoxLayout(self.content_plot)        
         self.lay.addWidget(self.myFig)
 
