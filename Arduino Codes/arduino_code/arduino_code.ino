@@ -4,6 +4,7 @@
 
 // Input: Pin D5
 
+long int time_now;
 // these are checked for in the main program
 
 volatile unsigned long timerCounts;
@@ -96,7 +97,7 @@ ISR (TIMER2_COMPA_vect)
 void setup () 
   {
   Serial.begin(9600);       
-//  Serial.println("Frequency Counter");
+  Serial.println(0);
   } // end of setup
 
 void loop () 
@@ -111,13 +112,15 @@ void loop ()
   
   while (!counterReady) 
      { }  // loop until count over
-
+  
   // adjust counts by counting interval to give frequency in Hz
+  
   float frq = (timerCounts *  1000.0) / timerPeriod;
-
-//  Serial.print ("Frequency: ");
+  time_now = millis();
+  Serial.print(time_now);
+  Serial.print(" ");
   Serial.println ((unsigned long) frq);
-//  Serial.println (" Hz.");
+  
   // restart timer 0
   TCCR0A = oldTCCR0A;
   TCCR0B = oldTCCR0B;

@@ -5,7 +5,7 @@ long long int out;
 void setup () 
   {
   Serial.begin(9600);       
-  Serial.println("Frequency Counter");
+  Serial.println(0);
   } // end of setup
 long int y(int x){
   long int out;
@@ -28,6 +28,8 @@ void loop ()
     data = 600;
     };
 //    out = data*data;
+  Serial.print(time_now);
+  Serial.print(" ");
   Serial.println(y(data));
 
 
