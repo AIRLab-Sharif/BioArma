@@ -8,5 +8,5 @@ def predict(x,y,x_p):
     max_indxs = findMaxs(regressed)
     return regressed, max_indxs
 
-def findMaxs(x):
-    return find_peaks(x)
+def findMaxs(sigg):
+    return find_peaks(sigg)

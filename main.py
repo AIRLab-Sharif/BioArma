@@ -1,7 +1,7 @@
 import sys
 # import os
 # import numpy as np
-from PyQt5 import QtCore, QtGui, QtWidgets, uic
+from PyQt5 import QtWidgets
 from PyQt5.QtCore import QObject, QThread, pyqtSignal
 from PyQt5.QtWidgets import QFileDialog
 from pyfirmata2 import Arduino  # import library from pyfirmata2 to detect Arduino
@@ -10,14 +10,11 @@ import numpy as np
 import pickle
 from datetime import date
 import webbrowser
-import matplotlib.pylab as plt
 import matplotlib.animation as animation
 import matplotlib.figure as mpl_fig
-from matplotlib.backends.backend_qt5agg import FigureCanvas 
-from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
+from matplotlib.backends.backend_qt5agg import FigureCanvas
 import serial
-from sensor_process import LPFilter
-from forecasting import predict
+from forecasting import predict, findMaxs
 from ui_main import *
 from Login import *
 from save_load import *
@@ -754,16 +751,17 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         self._y_range_ = y_range
         x = []
         y = []
-        x_maxs = []
+        x_maxs_pred = []
+        x_maxs_real = []
 
         self._ax_  = self.figure.subplots(2)
-        self._line_ = [self._ax_[0].plot(x, y), self._ax_[0].plot(x, y), self._ax_[0].plot(x, y,'kx')]
+        self._line_ = [self._ax_[0].plot(x, y), self._ax_[0].plot(x, y), self._ax_[0].plot(x, y,'kx'), self._ax_[0].plot(x, y,'bx')]
         self.dataTemp = 0
         self.timTemp = 0
-        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,x_maxs), interval=interval)
+        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,x_maxs_pred,x_maxs_real), interval=interval)
         return
 
-    def _update_canvas_(self, i, x, y, x_maxs):
+    def _update_canvas_(self, i, x, y, x_maxs_pred, x_maxs_real):
 
         try:
             new_data = self.serialPort.readline()
@@ -779,9 +777,6 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         x.append(timeNow)
         y = y[-self._x_len_:]
         x = x[-self._x_len_:]
-        # x_maxs = x_maxs[-self._x_len_:]
-        # filtered_data = LPFilter(x, y)
-        # y = filtered_data
         LimitD = 10000
         self._line_[0][0].set_xdata(x)
         self._line_[0][0].set_ydata(y)
@@ -794,18 +789,24 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
             [y_predicted, max_indxs] = predict(x2predict, y2predict, x_p)
             max_indxs = max_indxs[0]
             if len(x_p[max_indxs])>0:
-                if len(x_maxs)>0:
-                    if  abs(x_maxs[-1]-x_p[max_indxs][0])>=1:
-                        print(x_maxs[-1], x_p[max_indxs][0])
-                        x_maxs.append(x_p[max_indxs][0])
+                if len(x_maxs_pred)>0:
+                    if  abs(x_maxs_pred[-1]-x_p[max_indxs][0])>=1:
+                        x_maxs_pred.append(x_p[max_indxs][0])
                 else:
-                    x_maxs.append(x_p[max_indxs][0])
+                    x_maxs_pred.append(x_p[max_indxs][0])
+            x_maxs_pred = x_maxs_pred[-self._x_len_:]
 
             self._line_[1][0].set_xdata(x_p)
             self._line_[1][0].set_ydata(y_predicted)
-           
-            self._line_[2][0].set_xdata(x_maxs)
-            self._line_[2][0].set_ydata(np.ones(len(x_maxs)))
+
+            self._line_[2][0].set_xdata(x_maxs_pred)
+            self._line_[2][0].set_ydata(np.zeros(len(x_maxs_pred))*0+dataRealTime)
+            
+
+            x_maxs_real = [x[int(j)] for j in findMaxs(y)[0]]
+            self._line_[3][0].set_xdata(x_maxs_real)
+            self._line_[3][0].set_ydata(np.zeros(len(x_maxs_real))*0+dataRealTime)    
+                
 
             self._ax_[0].set_xlim(x[0], x_p[-1])
             self._ax_[1].set_xlim(x[0], x_p[-1])
