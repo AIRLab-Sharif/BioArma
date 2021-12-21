@@ -25,14 +25,14 @@ void loop ()
      data = (abs(time_now%2000-1000));
     }
     else if(time_now%2000>1600){
-    data = 600;
+
     };
 //    out = data*data;
-  Serial.print(time_now);
+  Serial.print((float)time_now/1000);
   Serial.print(" ");
   Serial.println(y(data));
 
 
   // let serial stuff finish
-  delay(200);
+  delay(20);
   }   // end of loop

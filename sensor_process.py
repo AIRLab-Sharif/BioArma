@@ -4,7 +4,7 @@ from scipy.signal import butter,filtfilt
 
 def LPFilter(time, data):
     try:
-        fs = 5
+        fs = 50
         cutoff = 1
         nyq = 0.5 * fs
         order = 4      

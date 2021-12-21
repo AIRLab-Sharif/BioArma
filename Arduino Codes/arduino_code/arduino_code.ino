@@ -117,7 +117,7 @@ void loop ()
   
   float frq = (timerCounts *  1000.0) / timerPeriod;
   time_now = millis();
-  Serial.print(time_now);
+  Serial.print((float)time_now/1000);
   Serial.print(" ");
   Serial.println ((unsigned long) frq);
   
@@ -127,5 +127,5 @@ void loop ()
 
 
   // let serial stuff finish
-  delay(20);
+  delay(200);
   }   // end of loop
