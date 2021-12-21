@@ -754,15 +754,16 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         self._y_range_ = y_range
         x = []
         y = []
+        x_maxs = []
 
         self._ax_  = self.figure.subplots(2)
-        self._line_ = [self._ax_[0].plot(x, y), self._ax_[1].plot(x, y)]
+        self._line_ = [self._ax_[0].plot(x, y), self._ax_[0].plot(x, y), self._ax_[0].plot(x, y,'kx')]
         self.dataTemp = 0
         self.timTemp = 0
-        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,), interval=interval)
+        animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,x_maxs), interval=interval)
         return
 
-    def _update_canvas_(self, i, x, y):
+    def _update_canvas_(self, i, x, y, x_maxs):
 
         try:
             new_data = self.serialPort.readline()
@@ -778,6 +779,7 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         x.append(timeNow)
         y = y[-self._x_len_:]
         x = x[-self._x_len_:]
+        # x_maxs = x_maxs[-self._x_len_:]
         # filtered_data = LPFilter(x, y)
         # y = filtered_data
         LimitD = 10000
@@ -789,12 +791,25 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
             x2predict = np.reshape(x[-secs4pred*fs:], [num_datas, int(secs4pred*fs/num_datas)])
             y2predict = np.reshape(y[-secs4pred*fs:], [num_datas, int(secs4pred*fs/num_datas)])
             x_p = np.linspace(x[-1], x[-1]+int(secs4pred/num_datas), int(secs4pred*fs/num_datas))
-            y_predicted = predict(x2predict, y2predict, x_p)
-            self._line_[1][0].set_xdata(x_p) #[i+len(x) for i in x])
+            [y_predicted, max_indxs] = predict(x2predict, y2predict, x_p)
+            max_indxs = max_indxs[0]
+            if len(x_p[max_indxs])>0:
+                if len(x_maxs)>0:
+                    if  abs(x_maxs[-1]-x_p[max_indxs][0])>=1:
+                        print(x_maxs[-1], x_p[max_indxs][0])
+                        x_maxs.append(x_p[max_indxs][0])
+                else:
+                    x_maxs.append(x_p[max_indxs][0])
+
+            self._line_[1][0].set_xdata(x_p)
             self._line_[1][0].set_ydata(y_predicted)
+           
+            self._line_[2][0].set_xdata(x_maxs)
+            self._line_[2][0].set_ydata(np.ones(len(x_maxs)))
+
             self._ax_[0].set_xlim(x[0], x_p[-1])
             self._ax_[1].set_xlim(x[0], x_p[-1])
-            self._ax_[1].set_ylim(y_predicted[-1]-LimitD,y_predicted[-1]+LimitD)
+            self._ax_[1].set_ylim(-2,2)
         else:
             self._ax_[0].set_xlim(x[0], x[-1])
             self._ax_[1].set_xlim(x[0], x[-1])
