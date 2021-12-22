@@ -20,7 +20,7 @@ void loop ()
     
     if(time_now%2000<400){
       data = 600;
-    }    
+    }   
     else if(time_now%2000<1600){
      data = (abs(time_now%2000-1000));
     }
@@ -34,5 +34,5 @@ void loop ()
 
 
   // let serial stuff finish
-  delay(20);
+  delay(200);
   }   // end of loop
