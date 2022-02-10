@@ -1,10 +1,12 @@
+%% run this section at the start
 clc
 clear
-arduino =  serialport('/dev/cu.usbmodem14201',9600);
-readline(arduino)
-write(arduino, "010", "string")
-readline(arduino)
-readline(arduino)
-readline(arduino)
-readline(arduino)
-clear arduino
+serial_port = '/dev/cu.usbmodem14201';
+bioarma =  serialport(serial_port,9600);
+%% apply your changes here
+clc
+valve = 1;
+time = 2;
+pinHandler(bioarma, valve, time)
+%% run this section at the end of the experiment
+clear bioarma
