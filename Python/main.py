@@ -755,7 +755,7 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
         x_maxs_real = []
 
         self._ax_  = self.figure.subplots(2)
-        self._line_ = [self._ax_[0].plot(x, y), self._ax_[0].plot(x, y), self._ax_[0].plot(x, y,'kx'), self._ax_[0].plot(x, y,'bx')]
+        self._line_ = [self._ax_[0].plot(x, y), self._ax_[0].plot(x, y), self._ax_[0].plot(x, y,'kx', label='Pred inh'), self._ax_[0].plot(x, y,'bx', label='True inh')]
         self.dataTemp = 0
         self.timTemp = 0
         animation.FuncAnimation.__init__(self, self.figure, self._update_canvas_, fargs=(x,y,x_maxs_pred,x_maxs_real), interval=interval)
@@ -788,6 +788,7 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
             x_p = np.linspace(x[-1], x[-1]+int(secs4pred/num_datas), int(secs4pred*fs/num_datas))
             [y_predicted, max_indxs] = predict(x2predict, y2predict, x_p)
             max_indxs = max_indxs[0]
+            
             if len(x_p[max_indxs])>0:
                 if len(x_maxs_pred)>0:
                     if  abs(x_maxs_pred[-1]-x_p[max_indxs][0])>=1:
@@ -801,13 +802,11 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
 
             self._line_[2][0].set_xdata(x_maxs_pred)
             self._line_[2][0].set_ydata(np.zeros(len(x_maxs_pred))*0+dataRealTime)
-            
 
             x_maxs_real = [x[int(j)] for j in findMaxs(y)[0]]
             self._line_[3][0].set_xdata(x_maxs_real)
             self._line_[3][0].set_ydata(np.zeros(len(x_maxs_real))*0+dataRealTime)    
                 
-
             self._ax_[0].set_xlim(x[0], x_p[-1])
             self._ax_[1].set_xlim(x[0], x_p[-1])
             self._ax_[1].set_ylim(-2,2)
@@ -816,7 +815,8 @@ class MyFigureCanvas(FigureCanvas, animation.FuncAnimation):
             self._ax_[1].set_xlim(x[0], x[-1])
 
 
-        
+
+        self._ax_[0].legend()
         self._ax_[0].set_ylim(dataRealTime-LimitD,dataRealTime+LimitD)
         
         return self._line_,
