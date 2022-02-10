@@ -1,0 +1,9 @@
+clc
+clear
+arduino =  serialport('/dev/cu.usbmodem14201',9600);
+readline(arduino)
+writeline(arduino, "8")
+writeline(arduino, "6")
+readline(arduino)
+readline(arduino)
+clear arduino
